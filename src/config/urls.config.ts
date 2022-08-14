@@ -22,8 +22,8 @@ const getQueryString = <T extends Record<string, number | string>>(obj: T): stri
 
 export const baseUrl = "http://localhost:3001";
 export const addPostUrl = () => `${baseUrl}/post`
-export const getPostsPaged = (query: PostsPagedQueryInterface) => `${baseUrl}/post/paged?${getQueryString<PostsPagedQueryInterface>(query)}`;
-export const getTodosPaged = (query: TodosPagesQueryInterface) => `${baseUrl}/todo/paged?${getQueryString<TodosPagesQueryInterface>(query)}`;
+export const getPostsPagedUrl = (query: PostsPagedQueryInterface) => `${baseUrl}/post/paged?${getQueryString<PostsPagedQueryInterface>(query)}`;
+export const getTodosPagedUrl = (query: TodosPagesQueryInterface) => `${baseUrl}/todo/paged?${getQueryString<TodosPagesQueryInterface>(query)}`;
 export const addTodoUrl = () => `${baseUrl}/todo`;
 export const addUserUrl = () => `${baseUrl}/user`;
-export const getUserPages = (query: PagedQueryInterface) => `${baseUrl}/user/paged?${getQueryString<PagedQueryInterface>(query)}`;
+export const getUserPagedUrl = (query: PagedQueryInterface) => `${baseUrl}/user/paged?${getQueryString<PagedQueryInterface>(query)}`;

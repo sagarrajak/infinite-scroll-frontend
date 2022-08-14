@@ -2,17 +2,20 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import UserCardComponent from './UserCard.component';
 import { InView } from 'react-intersection-observer';
 import { useQuery } from '@tanstack/react-query';
-import { getUserPages } from '../../config/urls.config';
+import { getUserPagedUrl } from '../../config/urls.config';
 import { UserInterface } from '../interfaces/user.interface';
 import Loader from '../../common/loader.component';
 import AddUserCardComponent from './AddUserCardComponent';
+import { useNavigate } from 'react-router';
+import { CreateUserRoute } from '../../config/routes.config';
 
 export default function UserListComponent() {
   const page = useRef<number>(1);
   const pagedData = useRef<UserInterface[]>([]);
+  const navigate = useNavigate();
 
   const { isLoading, error, data, refetch } = useQuery<unknown, unknown, UserInterface[]>(['user/pages'], () =>
-    fetch(getUserPages({ page: page.current, limit: 20}))
+    fetch(getUserPagedUrl({ page: page.current, limit: 20}))
       .then(res => res.json())
       .then(data => {
         pagedData.current = [...pagedData.current, ...data]
@@ -34,7 +37,7 @@ export default function UserListComponent() {
             <UserCardComponent user={user}  />
           </div>
         )}
-        <div className='mx-5 my-2'>
+        <div className='mx-5 my-2' onClick={() => navigate(CreateUserRoute())}>
           <AddUserCardComponent/>
         </div>
       </div>

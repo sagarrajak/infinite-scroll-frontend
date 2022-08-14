@@ -1,11 +1,36 @@
+import { useQuery } from '@tanstack/react-query'
 import { Form, Formik } from 'formik'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import ButtonLoader from '../../common/buttonLoader.component'
 import InputComponent from '../../common/Input.component'
 import TextAreaComponent from '../../common/textfileld.component'
+import { addUserUrl } from '../../config/urls.config'
+import { ErrorBody } from '../interfaces/error.interface'
 import { UserInterface } from '../interfaces/user.interface'
 
 
 export default function CreateUser() {
+
+  const formBody = useRef<Omit<UserInterface, 'id'>>()
+
+  const { isLoading, error, data, refetch } = useQuery<unknown, ErrorBody, UserInterface>(['user/create', formBody], () => {
+    return fetch(addUserUrl(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formBody.current)
+    })
+    .then(res => res.json());
+  }, {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    console.log(isLoading)
+  }, [isLoading]);
+
+
   return (
     <Formik<Omit<UserInterface, 'id'>>
       initialValues={{
@@ -16,9 +41,12 @@ export default function CreateUser() {
       }}
       onSubmit={(fields) => {
         console.log({fields});
+        formBody.current = fields;
+        refetch();
       }}
     >
-      <Form className='block p-6 max-w-4xl bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700'>
+      <Form 
+      className='block p-6 max-w-4xl bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700'>
       <InputComponent
             formKey='username'
             type='text'
@@ -82,6 +110,9 @@ export default function CreateUser() {
           />
         <button type="submit" className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
           Submit
+          {
+            isLoading && <ButtonLoader/>
+          }
         </button>
       </Form>
     </Formik>
