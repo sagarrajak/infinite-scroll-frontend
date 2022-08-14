@@ -7,8 +7,14 @@ import TextAreaComponent from '../../common/textfileld.component'
 import { addUserUrl } from '../../config/urls.config'
 import { ErrorBody } from '../interfaces/error.interface'
 import { UserInterface } from '../interfaces/user.interface'
+import * as Yup from 'yup';
 
-
+const SignupSchema = Yup.object().shape({
+  username: Yup.string().required('Username field is required!'),
+  email: Yup.string().required('Email field is required!').email(),
+  name: Yup.string().required('Name field is required!'),
+  phone: Yup.string().required('Phone number field is required!')
+});
 export default function CreateUser() {
 
   const formBody = useRef<Omit<UserInterface, 'id'>>()
@@ -39,6 +45,7 @@ export default function CreateUser() {
         name: "",
         phone: "",
       }}
+      validationSchema={SignupSchema}
       onSubmit={(fields) => {
         console.log({fields});
         formBody.current = fields;
