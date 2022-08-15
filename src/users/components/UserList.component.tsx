@@ -8,22 +8,31 @@ import Loader from '../../common/loader.component';
 import AddUserCardComponent from './AddUserCardComponent';
 import { useNavigate } from 'react-router';
 import { CreateUserRoute } from '../../config/routes.config';
+import { PagedResponse } from '../../common/interfaces/pagedResponse.interface';
 
 export default function UserListComponent() {
   const page = useRef<number>(1);
-  const pagedData = useRef<UserInterface[]>([]);
+  const pagedData = useRef<PagedResponse<UserInterface>>({
+    data: [],
+    isNextAvaible: true,
+    ok: true
+  });
   const navigate = useNavigate();
 
-  const { isLoading, error, data, refetch } = useQuery<unknown, unknown, UserInterface[]>(['user/pages'], () =>
+  const { isLoading, error, data, refetch } = useQuery<unknown, unknown, PagedResponse<UserInterface>>(['user/pages'], () =>
     fetch(getUserPagedUrl({ page: page.current, limit: 20}))
       .then(res => res.json())
       .then(data => {
-        pagedData.current = [...pagedData.current, ...data]
-        return pagedData.current;
+        if (data.ok) {
+          pagedData.current.isNextAvaible = data.isNextAvaible;
+          pagedData.current.data = [...pagedData.current.data, ...data.data];
+          return pagedData.current;
+        }
+        return Promise.reject(data);
       }));
 
   const retrigerPageApi = useCallback((InView: boolean) => {
-    if (!isLoading && InView) {
+    if (!isLoading && InView && data && data.isNextAvaible) {
       page.current++;
       refetch()
     }
@@ -32,7 +41,7 @@ export default function UserListComponent() {
   return (
     <div className='flex flex-col w-100'>
       <div className='w-100 grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5' >
-        {(data || []).map(user =>
+        {(data?.data || []).map(user =>
           <div className='mx-5 my-5' key={user.id}>
             <UserCardComponent user={user}  />
           </div>

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Form, Formik } from 'formik'
 import React, { useEffect, useRef, useState } from 'react'
 import ButtonLoader from '../../common/buttonLoader.component'
@@ -8,6 +8,9 @@ import { addUserUrl } from '../../config/urls.config'
 import { ErrorBody } from '../interfaces/error.interface'
 import { UserInterface } from '../interfaces/user.interface'
 import * as Yup from 'yup';
+import SuccessAlert from '../../common/successAlert.component'
+import ErrorAlert from '../../common/errorAlert.component'
+import useGenericState from '../../common/hooks/useGenericState'
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string().required('Username field is required!'),
@@ -15,30 +18,41 @@ const SignupSchema = Yup.object().shape({
   name: Yup.string().required('Name field is required!'),
   phone: Yup.string().required('Phone number field is required!')
 });
+
+interface createUserState {
+  showSucess: boolean;
+  showError: boolean;
+  successMessage: string;
+  errorMessage: string;
+}
+
 export default function CreateUser() {
 
-  const formBody = useRef<Omit<UserInterface, 'id'>>()
-
-  const { isLoading, error, data, refetch } = useQuery<unknown, ErrorBody, UserInterface>(['user/create', formBody], () => {
+  const createEmployee = (form: Omit<UserInterface, 'id'>) => {
     return fetch(addUserUrl(), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(formBody.current)
+      body: JSON.stringify(form)
+    }).then(res => {
+      return res.json(); 
     })
-    .then(res => res.json());
-  }, {
-    enabled: false,
-  });
+    .then(res => {
+      if (res.ok) {
+        return Promise.resolve(res);
+      }
+      return Promise.reject(res);
+    });
+  }
 
-  useEffect(() => {
-    console.log(isLoading)
-  }, [isLoading]);
-
+  const {  isLoading, mutate, isError, isSuccess, error} = useMutation<unknown, {message: string}, Omit<UserInterface, 'id'>>(createEmployee);
 
   return (
-    <Formik<Omit<UserInterface, 'id'>>
+    <>
+    <SuccessAlert message={"fdsjkdbfkdj"} show={isSuccess}/>
+    <ErrorAlert message={error?.message || 'Not able to add user!'} show={isError} />
+       <Formik<Omit<UserInterface, 'id'>>
       initialValues={{
         username: "",
         email: "",
@@ -48,8 +62,7 @@ export default function CreateUser() {
       validationSchema={SignupSchema}
       onSubmit={(fields) => {
         console.log({fields});
-        formBody.current = fields;
-        refetch();
+        mutate(fields);
       }}
     >
       <Form 
@@ -123,5 +136,7 @@ export default function CreateUser() {
         </button>
       </Form>
     </Formik>
+    </>
+ 
   )
 }
