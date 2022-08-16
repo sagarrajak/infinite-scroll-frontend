@@ -1,16 +1,13 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Form, Formik } from 'formik'
-import React, { useEffect, useRef, useState } from 'react'
+import * as Yup from 'yup'
 import ButtonLoader from '../../common/buttonLoader.component'
+import ErrorAlert from '../../common/errorAlert.component'
 import InputComponent from '../../common/Input.component'
+import SuccessAlert from '../../common/successAlert.component'
 import TextAreaComponent from '../../common/textfileld.component'
 import { addUserUrl } from '../../config/urls.config'
-import { ErrorBody } from '../interfaces/error.interface'
 import { UserInterface } from '../interfaces/user.interface'
-import * as Yup from 'yup';
-import SuccessAlert from '../../common/successAlert.component'
-import ErrorAlert from '../../common/errorAlert.component'
-import useGenericState from '../../common/hooks/useGenericState'
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string().required('Username field is required!'),
@@ -18,13 +15,6 @@ const SignupSchema = Yup.object().shape({
   name: Yup.string().required('Name field is required!'),
   phone: Yup.string().required('Phone number field is required!')
 });
-
-interface createUserState {
-  showSucess: boolean;
-  showError: boolean;
-  successMessage: string;
-  errorMessage: string;
-}
 
 export default function CreateUser() {
 
@@ -61,7 +51,6 @@ export default function CreateUser() {
       }}
       validationSchema={SignupSchema}
       onSubmit={(fields) => {
-        console.log({fields});
         mutate(fields);
       }}
     >

@@ -11,7 +11,7 @@ import { CreateUserRoute } from '../../config/routes.config';
 import { PagedResponse } from '../../common/interfaces/pagedResponse.interface';
 
 export default function UserListComponent() {
-  const page = useRef<number>(1);
+  const [page, setPage] = useState<number>(1);
   const pagedData = useRef<PagedResponse<UserInterface>>({
     data: [],
     isNextAvaible: true,
@@ -19,24 +19,24 @@ export default function UserListComponent() {
   });
   const navigate = useNavigate();
 
-  const { isLoading, error, data, refetch } = useQuery<unknown, unknown, PagedResponse<UserInterface>>(['user/pages'], () =>
-    fetch(getUserPagedUrl({ page: page.current, limit: 20}))
+  const { isLoading, error, data, refetch } = useQuery<unknown, unknown, PagedResponse<UserInterface>>(['user/pages', page], () =>
+    fetch(getUserPagedUrl({ page: page, limit: 20}))
       .then(res => res.json())
       .then(data => {
         if (data.ok) {
           pagedData.current.isNextAvaible = data.isNextAvaible;
           pagedData.current.data = [...pagedData.current.data, ...data.data];
-          return pagedData.current;
+          return Promise.resolve(pagedData.current);
         }
         return Promise.reject(data);
       }));
 
   const retrigerPageApi = useCallback((InView: boolean) => {
     if (!isLoading && InView && data && data.isNextAvaible) {
-      page.current++;
+      setPage(page + 1);
       refetch()
     }
-  }, [refetch, isLoading]);
+  }, [refetch, isLoading, data, page]);
 
   return (
     <div className='flex flex-col w-100'>
@@ -52,7 +52,7 @@ export default function UserListComponent() {
       </div>
       <InView onChange={retrigerPageApi} threshold={1}>
         <div className='w-100 flex flex-row justify-center'>
-          {isLoading && <Loader />}
+          {data && data.isNextAvaible && <Loader />}
         </div>
       </InView>
     </div>
