@@ -42,7 +42,6 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
     })
    , {
         onSuccess: (data) => {
-          // console.log(pagedData.current.isNextAvaible);
           setTimeout(() => {  // check view is still visible update view 
             if (isInView.current && data && data.isNextAvaible) {
               setPage(page+1);

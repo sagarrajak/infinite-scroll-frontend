@@ -4,10 +4,8 @@ export interface Props {
   user: UserInterface
 }
 
-
-export default function UserCardComponent(props: Props) {
+const UserCardComponent: React.FC<Props> = (props: Props) => {
   const { name, email, username } = props.user;
-
   return (
     <a href="#" className="block p-6 max-w-4xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
       <img className="w-100 h-100 rounded-full" src="/avater.png" alt="Rounded avatar"></img>
@@ -17,3 +15,5 @@ export default function UserCardComponent(props: Props) {
     </a>
   )
 }
+
+export default UserCardComponent;

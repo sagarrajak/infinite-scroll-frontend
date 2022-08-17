@@ -24,14 +24,13 @@ export default function UserListComponent() {
           if (firstElementId > 0) {
             firstElementRef.current?.scrollIntoView();
           }
-        });
+        }, [firstElementId]);
       
         return (
         <div className='w-100 grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5' >
           {(data || []).map(user =>
             {
               const refProsp = firstElementId === user.id ? { ref: firstElementRef} : {};
-
               return (<div className='mx-5 my-5' key={user.id} onClick={() => navigate(`${user.id}/posts`)} {...refProsp}>
                       <UserCardComponent user={user} />
                 </div>)

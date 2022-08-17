@@ -1,6 +1,7 @@
-import { useField } from 'formik';
 import React from 'react'
+import { Controller } from "react-hook-form";
 export interface Props {
+    control: any;
     formKey: string;
     type: string;
     placeholder: string;
@@ -24,25 +25,33 @@ border border-red-500 \
 text-red-900 text-sm rounded-lg focus:ring-geen-500 \
 focus:border-red-700 block w-full p-2.5 dark:bg-red-700 dark:border-red-600 dark:placeholder-red-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
 
-export default function InputComponent(props: Props) {
-    const { type, label, placeholder, required, formKey } = props;
-    const [field, meta] = useField(props.formKey);
-    const { touched, error } = meta;
-
-    return (
+const InputComponent: React.FC<Props> = (props: Props) => {
+    const { type, label, placeholder, formKey, control } = props;
+    return <Controller
+    control={control}
+    name={formKey}
+    render={({
+      field,
+      fieldState: { invalid, isTouched, isDirty, error },
+      formState,
+    }) => (
         <div className='mx-4 my-4'>
-            <label htmlFor={`id$${formKey}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">{label}</label>
-            <input
-                type={type}
-                id={`id$${formKey}`}
-                {...field}
-                className={touched ? error ? dirtyClassString : touchedClassString : normalClassString}
-                placeholder={placeholder} required={required} />
-            {
-                touched && error && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">{error}</p>
-                )
-            }
-        </div>
-    )
-}
+        <label htmlFor={`id$${formKey}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">{label}</label>
+        <input
+            type={type}
+            id={`id$${formKey}`}
+            className={isTouched ? error ? dirtyClassString : touchedClassString : normalClassString}
+            placeholder={placeholder}
+            {...field}
+            />
+        {
+            isTouched && error && (
+                <p className="mt-2 text-sm text-red-600 dark:text-red-500">{error.message}</p>
+            )
+        }
+    </div>
+    )}
+  />
+};
+
+export default InputComponent;
