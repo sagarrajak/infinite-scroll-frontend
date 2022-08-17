@@ -1,10 +1,11 @@
 import React from 'react'
 import { Outlet } from 'react-router'
 
-export default function UsersContainers() {
+const UsersContainers: React.FC = () => {
   return (
     <div>
         <Outlet></Outlet>
     </div>
   )
-}
+};
+export default UsersContainers;

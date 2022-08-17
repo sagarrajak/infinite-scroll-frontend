@@ -20,7 +20,7 @@ const getQueryString = <T extends Record<string, number | string>>(obj: T): stri
     return uri.toString();
 }
 
-export const baseUrl = "http://localhost:3001";
+export const baseUrl = process.env.REACT_APP_ROOT_URL;
 export const addPostUrl = () => `${baseUrl}/post`
 export const getPostsPagedUrl = (query: PostsPagedQueryInterface) => `${baseUrl}/post/paged?${getQueryString<PostsPagedQueryInterface>(query)}`;
 export const getTodosPagedUrl = (query: TodosPagesQueryInterface) => `${baseUrl}/todo/paged?${getQueryString<TodosPagesQueryInterface>(query)}`;

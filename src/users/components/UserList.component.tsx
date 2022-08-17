@@ -7,7 +7,7 @@ import { UserInterface } from '../interfaces/user.interface';
 import AddUserCardComponent from './AddUserCardComponent';
 import UserCardComponent from './UserCard.component';
 
-export default function UserListComponent() {
+const  UserListComponent: React.FC = () => {
   const navigate = useNavigate();
   const firstElementRef = useRef<HTMLDivElement>(null);
  
@@ -44,3 +44,5 @@ export default function UserListComponent() {
     </PaginatedComponent>
   );
 }
+
+export default UserListComponent;
