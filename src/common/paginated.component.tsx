@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { PagedQueryInterface } from '../config/urls.config';
 import { PagedResponse } from './interfaces/pagedResponse.interface';
 import { InView } from 'react-intersection-observer';
@@ -25,30 +25,31 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
       ok: true,
     });
 
-    const { isLoading, error, data } = useQuery<unknown, unknown, PagedResponse<T>>([uniqueKey, page], () => fetch(apiFunction({ page, limit}))
-    .then(res => res.json())
-    .then(data => {
-      if (data.ok) {
-        if (data.data && data.data.length) {
-          firstElementId.current =  data.data[0].id;
+    const fetchQuery = async () => {
+      const responseRaw =  await fetch(apiFunction({ page, limit}));
+      const response = await responseRaw.json();
+      if (response.ok) {
+        if (response.data && response.data.length) {
+          firstElementId.current =  response.data[0].id;
         } else {
           firstElementId.current = 0;
         }
-        pagedData.current.isNextAvaible = data.isNextAvaible;
-        pagedData.current.data = [...pagedData.current.data, ...data.data];
+        pagedData.current.isNextAvaible = response.isNextAvaible;
+        pagedData.current.data = [...pagedData.current.data, ...response.data];
         return Promise.resolve(pagedData.current);
       }
       return Promise.reject(data);
-    })
-   , {
-        onSuccess: (data) => {
-          setTimeout(() => {  // check view is still visible update view 
-            if (isInView.current && data && data.isNextAvaible) {
-              setPage(page+1);
-            }
-          }, 100);
-        },
-      });
+    }
+
+  const { isLoading, error, data } = useQuery<unknown, unknown, PagedResponse<T>>([uniqueKey, page], fetchQuery, {
+    onSuccess: (data) => {
+      setTimeout(() => {  // check view is still visible update view 
+        if (isInView.current && data && data.isNextAvaible) {
+          setPage(page + 1);
+        }
+      }, 100);
+    },
+  });
 
     const retrigerPageApi = useCallback((InView: boolean) => {
         isInView.current = InView;
