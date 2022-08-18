@@ -27,6 +27,7 @@ const CreatePostModel: React.FC<Props> = () => {
   const { isLoading, mutate } = useMutation<unknown, { message: string }, Omit<PostInterface, 'id'>>(createPost, {
     onSuccess: () => {
       toast.success("User added successfully");
+      handleClose();
     },
     onError: (error) => {
       toast.error(Helper.getErrorMessage(error.message, "unbale to add user !"));

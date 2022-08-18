@@ -23,9 +23,10 @@ const CreateTodoComponent: React.FC = () => {
     const { isLoading, mutate } = useMutation<unknown, { message: string }, Omit<TodoInterface, 'id' | 'done'>>(createTodo, {
       onSuccess: () => {
         toast.success("Todo added successfully");
+        handleClose();
       },
       onError: (error) => {
-        toast.error(Helper.getErrorMessage(error.message, "unbale to add todo !"));
+        toast.error(Helper.getErrorMessage(error.message, "Unbale to add todo !"));
       }
     });
   
