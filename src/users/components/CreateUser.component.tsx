@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
-import { Button, Card, Container, Form } from 'react-bootstrap'
+import { Button, Card, Form } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
@@ -8,6 +8,7 @@ import { createEmployee } from '../../common/apiCalls/employee'
 import ButtonLoader from '../../common/buttonLoader.component'
 import InputComponent from '../../common/form-fields/Input.component'
 import TextAreaComponent from '../../common/form-fields/textfileld.component'
+import { Helper } from '../../common/helper'
 import { UserInterface } from '../interfaces/user.interface'
 
 const SignupSchema = Yup.object().shape({
@@ -19,12 +20,12 @@ const SignupSchema = Yup.object().shape({
 
 const CreateUser: React.FC = () => {
 
-  const { isLoading, mutate } = useMutation<unknown, { message: string }, Omit<UserInterface, 'id'>>(createEmployee, {
+const { isLoading, mutate } = useMutation<unknown, { message: string }, Omit<UserInterface, 'id'>>(createEmployee, {
     onSuccess: () => {
       toast.success("User added successfully");
     },
     onError: (error) => {
-      toast.error(error.message || "unbale to add user !");
+      toast.error(Helper.getErrorMessage( error.message , "unbale to add user !"));
     }
   });
 

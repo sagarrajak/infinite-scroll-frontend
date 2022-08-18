@@ -8,8 +8,6 @@ import PostCardComponent from './PostCard.component';
 export default function ListPostComponent() {
   let { id } = useParams();
   const firstElementRef = useRef<HTMLDivElement>(null);
-  if (!id)
-    return <>No id</>;
 
   return (
     <PaginatedComponent<PostInterface>
