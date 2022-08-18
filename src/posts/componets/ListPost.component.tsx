@@ -1,74 +1,46 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import { useParams } from 'react-router';
+import PaginatedComponent from '../../common/paginated.component';
+import { getPostsPagedUrl, PagedQueryInterface } from '../../config/urls.config';
 import { PostInterface } from '../interfaces/posts.interface';
 import PostCardComponent from './PostCard.component';
 
-const postList: PostInterface[] = [
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 1
-  },
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 2
-  },
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 3
-  },
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 4
-  },
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 5
-  },
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 6
-  },
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 7
-  },
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 8
-  },
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 9
-  },
-  { 
-    userName: "sagar",
-    details: "dksldlsdlsdsd",
-    id: 10
-  },
-];
-
-
 export default function ListPostComponent() {
+  let { id } = useParams();
+  const firstElementRef = useRef<HTMLDivElement>(null);
+  if (!id)
+    return <>No id</>;
+
   return (
-    <div>
-      <div className='grid grid-cols-1 w-100'>
-        {
-          postList.map((post) =>
-            <div className='mx-5 my-2 w-100'>
-              <PostCardComponent post={post} />
-            </div>
-          )
-        }
-      </div>
-    </div>
-  
+    <PaginatedComponent<PostInterface>
+      apiFunction={(value: PagedQueryInterface) => {
+        return getPostsPagedUrl({
+          ...value,
+          ...{
+            userId: id ? +id : 0,
+          }
+        });
+      }} uniqueKey={'user/posts'} limit={10}>
+      {(data, firstElementId) => {
+        //  eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(() => {
+          if (firstElementId > 0) {
+            firstElementRef.current?.scrollIntoView();
+          }
+        }, [firstElementId]);
+
+        return (
+          <div className='row'>
+            {(data || []).map(post => {
+              const refProsp = firstElementId === post.id ? { ref: firstElementRef } : {};
+              return (<div className='mt-1 mb-1 w-100 col-md-1 col-sm-1'>
+                <PostCardComponent post={post} {...refProsp} />
+              </div>)
+            }
+            )}
+          </div>
+        )
+      }}
+    </PaginatedComponent>
   )
 }

@@ -1,17 +1,16 @@
 import React from 'react'
+import { Card } from 'react-bootstrap';
 import { PostInterface } from '../interfaces/posts.interface'
 export interface Props {
     post: PostInterface;
 }
 
 export default function PostCardComponent(props: Props) {
-    const { userName, details } = props.post;
+    const { title, body } = props.post;
     return (
-        <div className="p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-            <a href="#">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{userName}</h5>
-            </a>
-            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{details}</p>
-        </div>
+        <Card className='p-2'>
+            <Card.Title>{title}</Card.Title>
+            <Card.Body>{body}</Card.Body>
+        </Card>
     )
 }
