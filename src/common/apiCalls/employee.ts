@@ -15,8 +15,6 @@ const createEmployee = async (form: Omit<UserInterface, 'id'>) => {
   return Promise.reject(response);
 }
 
-
-
 export {
     createEmployee,
 }

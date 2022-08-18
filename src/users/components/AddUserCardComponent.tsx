@@ -1,10 +1,11 @@
 import React from 'react'
+import { Card } from 'react-bootstrap';
 
 const AddUserCardComponent: React.FC = () => {
   return (
-    <a href="#" className="block p-6 max-w-4xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-      <img className="w-100 h-100 rounded-full" src="/add.png" alt="Rounded avatar"></img>
-    </a>
+    <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src="/add.png" />
+    </Card>
   )
 };
 

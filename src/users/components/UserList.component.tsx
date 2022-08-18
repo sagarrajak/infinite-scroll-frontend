@@ -27,16 +27,16 @@ const  UserListComponent: React.FC = () => {
         }, [firstElementId]);
       
         return (
-        <div className='w-100 grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5' >
+        <div className='row'>
           {(data || []).map(user =>
             {
               const refProsp = firstElementId === user.id ? { ref: firstElementRef} : {};
-              return (<div className='mx-5 my-5' key={user.id} onClick={() => navigate(`${user.id}/posts`)} {...refProsp}>
+              return (<div className='mt-2 mb-2 col-lg-3 col-md-4 col-sm-6' key={user.id} onClick={() => navigate(`${user.id}/posts`)} {...refProsp}>
                       <UserCardComponent user={user} />
                 </div>)
             }
           )}
-          <div className='mx-5 my-2' onClick={() => navigate(CreateUserRoute())}>
+          <div  className='mt-2 mb-2 col-lg-3 col-md-4 col-sm-6' onClick={() => navigate(CreateUserRoute())}>
             <AddUserCardComponent />
           </div>
         </div>

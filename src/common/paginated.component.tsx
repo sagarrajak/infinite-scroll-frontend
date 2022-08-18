@@ -59,10 +59,10 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
     }, [isLoading, page, data]);
 
   return (
-    <div className='flex flex-col w-100'>
+    <div className='d-flex flex-column w-100'>
       {props.children(data?.data || [], firstElementId.current)}
       <InView onChange={retrigerPageApi} threshold={1}>
-        <div className='w-100 flex flex-row justify-center'>
+        <div className='w-100 d-flex justify-content-center'>
           {data && data.isNextAvaible && <Loader />}
         </div>
       </InView>
