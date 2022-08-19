@@ -8,6 +8,7 @@ import CreateTodoComponent from './todos/components/CreateTodo.component';
 import TodoListComponent from './todos/components/TodoList.component';
 import TodosContainers from './todos/todos.containers';
 import CreateUser from './users/components/CreateUser.component';
+import UpdateUserComponent from './users/components/UpdateUser.component';
 import UserListComponent from './users/components/UserList.component';
 import UsersContainers from './users/users.container';
 
@@ -29,6 +30,7 @@ export default function AppRouter() {
             </Route>
           </Route>
           <Route path='create' element={<CreateUser />}></Route>
+          <Route path='update' element={<UpdateUserComponent />}></Route>
         </Route>
         <Route
           path="*"

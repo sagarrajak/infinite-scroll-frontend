@@ -4,14 +4,14 @@ import { Button, Card, Form } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
-import { createEmployee } from '../../common/apiCalls/employee'
+import { createUser } from '../../common/apiCalls/users'
 import ButtonLoader from '../../common/buttonLoader.component'
 import InputComponent from '../../common/form-fields/Input.component'
 import TextAreaComponent from '../../common/form-fields/textfileld.component'
 import { Helper } from '../../common/helper'
 import { UserInterface } from '../interfaces/user.interface'
 
-const SignupSchema = Yup.object().shape({
+const CreateUserSchema = Yup.object().shape({
   username: Yup.string().required('Username field is required!'),
   email: Yup.string().required('Email field is required!').email(),
   name: Yup.string().required('Name field is required!'),
@@ -20,7 +20,7 @@ const SignupSchema = Yup.object().shape({
 
 const CreateUser: React.FC = () => {
 
-const { isLoading, mutate } = useMutation<unknown, { message: string }, Omit<UserInterface, 'id'>>(createEmployee, {
+const { isLoading, mutate } = useMutation<unknown, { message: string }, Omit<UserInterface, 'id'>>(createUser, {
     onSuccess: () => {
       toast.success("User added successfully");
     },
@@ -30,7 +30,7 @@ const { isLoading, mutate } = useMutation<unknown, { message: string }, Omit<Use
   });
 
   const { handleSubmit, control } = useForm<Omit<UserInterface, 'id'>>({
-    resolver: yupResolver(SignupSchema)
+    resolver: yupResolver(CreateUserSchema)
   });
 
   const onSubmit = (fields: Omit<UserInterface, 'id'>) => {

@@ -26,4 +26,5 @@ export const getPostsPagedUrl = (query: PostsPagedQueryInterface) => `${baseUrl}
 export const getTodosPagedUrl = (query: TodosPagesQueryInterface) => `${baseUrl}/todo/paged?${getQueryString<TodosPagesQueryInterface>(query)}`;
 export const addTodoUrl = () => `${baseUrl}/todo`;
 export const addUserUrl = () => `${baseUrl}/user`;
+export const updateUserUrl = () => `${baseUrl}/user`;
 export const getUserPagedUrl = (query: PagedQueryInterface) => `${baseUrl}/user/paged?${getQueryString<PagedQueryInterface>(query)}`;
