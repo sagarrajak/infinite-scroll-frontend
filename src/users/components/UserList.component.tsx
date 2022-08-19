@@ -9,8 +9,6 @@ import UserCardComponent from './UserCard.component';
 
 const  UserListComponent: React.FC = () => {
   const navigate = useNavigate();
-  const firstElementRef = useRef<HTMLDivElement>(null);
- 
   return (
     <PaginatedComponent<UserInterface>
       apiFunction={(value: PagedQueryInterface) => {
@@ -18,29 +16,18 @@ const  UserListComponent: React.FC = () => {
       }
       } uniqueKey={'user/pages'} limit={10}
     >
-      {(data, firstElementId) =>  {
-      //  eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-          if (firstElementId > 0) {
-            firstElementRef.current?.scrollIntoView();
-          }
-        }, [firstElementId]);
-      
-        return (
+      {(data) => (
         <div className='row'>
           {(data || []).map(user =>
-            {
-              const refProsp = firstElementId === user.id ? { ref: firstElementRef} : {};
-              return (<div className='mt-2 mb-2 col-lg-3 col-md-4 col-sm-6' key={user.id} onClick={() => navigate(`${user.id}/posts`)} {...refProsp}>
-                      <UserCardComponent user={user} />
-                </div>)
-            }
+          (<div className='mt-2 mb-2 col-lg-3 col-md-4 col-sm-6' key={user.id} onClick={() => navigate(`${user.id}/posts`)}>
+            <UserCardComponent user={user} />
+          </div>)
           )}
-          <div  className='mt-2 mb-2 col-lg-3 col-md-4 col-sm-6' onClick={() => navigate(CreateUserRoute())}>
+          <div className='mt-2 mb-2 col-lg-3 col-md-4 col-sm-6' onClick={() => navigate(CreateUserRoute())}>
             <AddUserCardComponent />
           </div>
         </div>
-      )}}
+      )}
     </PaginatedComponent>
   );
 }

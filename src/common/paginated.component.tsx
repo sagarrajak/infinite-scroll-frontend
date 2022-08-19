@@ -42,6 +42,7 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
     }
 
   const { isLoading, error, data } = useQuery<unknown, unknown, PagedResponse<T>>([uniqueKey, page], fetchQuery, {
+    keepPreviousData: true,
     onSuccess: (data) => {
       setTimeout(() => {  // check view is still visible update view 
         if (isInView.current && data && data.isNextAvaible) {
@@ -51,12 +52,12 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
     },
   });
 
-    const retrigerPageApi = useCallback((InView: boolean) => {
-        isInView.current = InView;
-        if (!isLoading && InView && data &&  data.isNextAvaible) {
-          setPage(page + 1);
-        }
-    }, [isLoading, page, data]);
+  const retrigerPageApi = useCallback((InView: boolean) => {
+      isInView.current = InView;
+      if (!isLoading && InView && data &&  data.isNextAvaible) {
+        setPage(page + 1);
+      }
+  }, [isLoading, page, data]);
 
   return (
     <div className='d-flex flex-column w-100'>
