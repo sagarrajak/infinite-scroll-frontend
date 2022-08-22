@@ -6,4 +6,6 @@ export interface CommentInterface {
      commenterId: number;
      postId: number;
      id: number;
+     createdAt?: Date;
+     updatedAt?: Date;
 }

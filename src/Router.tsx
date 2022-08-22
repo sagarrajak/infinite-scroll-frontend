@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import CreatePost from './posts/componets/CreatePost.component';
-import EditPost from './posts/componets/EditPost.component';
-import ListPostComponent from './posts/componets/ListPost.component';
+import CreatePost from './posts/components/CreatePost.component';
+import EditPost from './posts/components/EditPost.component';
+import ListPostComponent from './posts/components/ListPost.component';
 import PostContainer from './posts/post.container';
 import CreateTodoComponent from './todos/components/CreateTodo.component';
 import TodoListComponent from './todos/components/TodoList.component';

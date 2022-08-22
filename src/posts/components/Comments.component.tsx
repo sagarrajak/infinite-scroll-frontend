@@ -9,7 +9,7 @@ import { Helper } from '../../common/helper';
 import PaginatedComponent, { PageComponentParams } from '../../common/paginated.component';
 import { getCommentsPagedUrl, PagedQueryInterface } from '../../config/urls.config';
 import { CommentInterface } from '../interfaces/comment.interface';
-import './Comment.css';
+import './Comment.scss';
 
 export interface Props {
     open: boolean;
@@ -76,7 +76,10 @@ const CommentsComponent: React.FC<Props> = (props: Props) => {
                         <div className='row'>
                             {(data || []).map(post => (<div className='mt-1 mb-1 w-100 col-md-1 col-sm-1' key={post.id}>
                                 {/* <b><h4>{post.commenter.name}</h4></b> */}
-                                <p>{post.comment}</p>
+                                <p className='comment-container__header'>{post.comment}
+                                { !!post.createdAt && <span className='comment-container__date'>{new Date(post.createdAt).toLocaleDateString()}</span> }
+                                </p>
+                                
                             </div>)
                             )}
                         </div>
