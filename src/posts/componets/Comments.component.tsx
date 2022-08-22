@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { postComment } from '../../common/apiCalls/posts';
 import ButtonLoader from '../../common/buttonLoader.component';
 import { Helper } from '../../common/helper';
-import PaginatedComponent from '../../common/paginated.component';
+import PaginatedComponent, { PageComponentParams } from '../../common/paginated.component';
 import { getCommentsPagedUrl, PagedQueryInterface } from '../../config/urls.config';
 import { CommentInterface } from '../interfaces/comment.interface';
 import './Comment.css';
@@ -21,10 +21,12 @@ const CommentsComponent: React.FC<Props> = (props: Props) => {
     const { open, userId, postId } = props;
 
     const { register, handleSubmit, formState: { errors } } = useForm<{ comment: string }>();
+    const pageComponentParams = useRef<PageComponentParams>();
 
     const { isLoading, mutate } = useMutation<unknown, { message: string }, Omit<CommentInterface, 'id' | 'commenter'>>(postComment, {
         onSuccess: () => {
             toast.success("Comment added successfully");
+            pageComponentParams.current?.refresh();
         },
         onError: (error: any) => {
             toast.error(Helper.getErrorMessage(error.message, "unbale to add comment !"));
@@ -38,7 +40,7 @@ const CommentsComponent: React.FC<Props> = (props: Props) => {
                 postId,
                 commenterId: 1,
             }
-        })
+        });
     }
 
     if (!open)
@@ -68,7 +70,8 @@ const CommentsComponent: React.FC<Props> = (props: Props) => {
                     });
                 }} uniqueKey={`user/comment/${postId}`} limit={3}
             >
-                {(data) => {
+                {(data, params) => {
+                    pageComponentParams.current = params;
                     return (
                         <div className='row'>
                             {(data || []).map(post => (<div className='mt-1 mb-1 w-100 col-md-1 col-sm-1' key={post.id}>

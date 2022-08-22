@@ -5,8 +5,12 @@ import { PagedResponse } from './interfaces/pagedResponse.interface';
 import { InView } from 'react-intersection-observer';
 import Loader from './loader.component';
 
+export type PageComponentParams = {
+  refresh: () => void;
+  firstElementId: number;
+}
 export interface PaginatedComponentProps<T> {
-    children: (data: T[], firstElementId: number) => JSX.Element | JSX.Element[];
+    children: (data: T[], parmas: PageComponentParams) => JSX.Element | JSX.Element[];
     apiFunction: (value: PagedQueryInterface) => string;
     uniqueKey: string;
     limit: number;
@@ -60,9 +64,21 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
       }
   }, [isLoading, page, data]);
 
+  const refresh =  useCallback(
+    () => {
+      pagedData.current = {
+        data: [],
+        isNextAvaible: true,
+        ok: true,
+      };
+      setPage(1);
+    },
+    [setPage],
+  );
+  
   return (
     <div className='d-flex flex-column w-100'>
-      {props.children(data?.data || [], firstElementId.current)}
+      {props.children(data?.data || [], {firstElementId: firstElementId.current, refresh})}
       <InView onChange={retrigerPageApi} threshold={1}>
         <div className='w-100 d-flex justify-content-center'>
           {data && data.isNextAvaible && <Loader />}
