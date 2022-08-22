@@ -20,6 +20,8 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
     const { apiFunction, uniqueKey, limit } = props;
 
     const [page, setPage] = useState<number>(1);
+    const [refreshKey, setRefreshKey] = useState<number>(0);
+
     const firstElementId = useRef<number>(0); // use for moving focus of browser scroll
     const isInView = useRef<boolean>(false);
 
@@ -46,7 +48,7 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
       return Promise.reject(data);
     }
 
-  const { isLoading, error, data } = useQuery<unknown, unknown, PagedResponse<T>>([uniqueKey, page], fetchQuery, {
+  const { isLoading, error, data } = useQuery<unknown, unknown, PagedResponse<T>>([uniqueKey, page, refreshKey], fetchQuery, {
     keepPreviousData: true,
     onSuccess: (data) => {
       setTimeout(() => {  // check view is still visible update view 
@@ -72,14 +74,15 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
         ok: true,
       };
       setPage(1);
+      setRefreshKey(refreshKey+1);
     },
-    [setPage],
+    [refreshKey],
   );
   
   return (
     <div className='d-flex flex-column w-100'>
       {props.children(data?.data || [], {firstElementId: firstElementId.current, refresh})}
-      <InView onChange={retrigerPageApi} threshold={1}>
+      <InView onChange={retrigerPageApi} threshold={0}>
         <div className='w-100 d-flex justify-content-center'>
           {data && data.isNextAvaible && <Loader />}
         </div>
