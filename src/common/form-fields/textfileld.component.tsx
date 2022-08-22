@@ -10,9 +10,8 @@ export interface Props {
     required: boolean;
 }
 
-export default function TextAreaComponent(props: Props) {
+const TextAreaComponent: React.FC<Props> = (props: Props) => {
     const { label, placeholder, required, formKey, control } = props;
-
     return <Controller
         control={control}
         name={formKey}
@@ -31,3 +30,4 @@ export default function TextAreaComponent(props: Props) {
         )}
     />
 }
+export default TextAreaComponent;

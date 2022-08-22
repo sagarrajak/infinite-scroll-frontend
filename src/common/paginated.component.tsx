@@ -36,6 +36,7 @@ export default function PaginatedComponent<T extends { id: number }>(props: Pagi
         }
         pagedData.current.isNextAvaible = response.isNextAvaible;
         pagedData.current.data = [...pagedData.current.data, ...response.data];
+        pagedData.current = {...pagedData.current};
         return Promise.resolve(pagedData.current);
       }
       return Promise.reject(data);
